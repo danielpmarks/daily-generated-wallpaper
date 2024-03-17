@@ -1,0 +1,1 @@
+# daily-generated-wallpaper
