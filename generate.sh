@@ -70,7 +70,7 @@ then
         then
             $pip_cmd install openai
         fi
-        
+
         $pip_cmd install python-dotenv
 
         # generate a new image
