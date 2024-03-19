@@ -7,6 +7,7 @@ directory=$(pwd)
 python_path=$(which python)
 if [ "$python_path" == "" ];
 then
+    echo "TEST"
     python_path=$(which python3)
     if [ "$python_path" == "" ];
     then
@@ -25,7 +26,8 @@ fi
 
 get_confirmation() {
         while true; do
-            read -p "It looks like the program has already been set up. Would you like to override your current config? [y/N] " yn
+            local message="$1"
+            read -p "$message" yn
             case $yn in
                 [Yy]* ) return 0;;  # If user input starts with 'y' or 'Y', return true (0)
                 [Nn]* ) return 1;;  # If user input starts with 'n' or 'N', return false (1)
@@ -37,7 +39,8 @@ get_confirmation() {
 
 if [ -e ".env" ];
 then
-    if ! get_confirmation; then
+    message="It looks like the program has already been set up. Would you like to override your current config? [y/N] "
+    if ! get_confirmation "$message"; then
         exit
     fi
 fi
@@ -46,5 +49,16 @@ read -p "Please enter your OpenAI API key: " apiKey
 echo "API_KEY=\"$apiKey\"" > .env
 echo "DIRECTORY=\"$directory/\"" >> .env
 
-echo "Please add the following string to your crontab via 'crontab -e':"
-echo "* * * * * export PATH=\$PATH:$pip_path; $directory/generate.sh;"
+echo "Please accept permission to edit automation on your mac"
+cron_job="* * * * * export PATH=\$PATH:$pip_path; $directory/generate.sh;"
+
+if crontab -l | grep -q "$cron_job"; then
+    echo "The cron job already exists in the crontab."
+else 
+    echo "$cron_job" | crontab -
+fi
+
+message="You must enable cron to access system events to run automation. Continue to System Preferences? [y/N] " 
+if get_confirmation "$message"; then
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation"
+fi

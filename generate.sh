@@ -1,10 +1,7 @@
 #! /bin/bash
-set -e 
 
-REL_DIR=$(dirname "$0")
-cd $REL_DIR
+cd $(dirname "$0")
 DIRECTORY=$(pwd)
-echo "$DIRECTORY"
 
 # Get the name of the directory for today's wallpaper
 DATE=$(date '+%Y-%m-%d')
@@ -28,27 +25,56 @@ CUR_WALLPAPER="${CUR_WALLPAPER_PATH: -44}"
 # Today's wallpaper
 TODAY_DIR="generated/Wallpaper_$DATE"
 
+
 if [[ "$CUR_WALLPAPER" != "$TODAY_DIR/wallpaper.png" ]]; 
 then
     if [ ! -d "$DIRECTORY/$TODAY_DIR/" ];
     then
+        # Figure out the right command for python and pip
+        python_cmd=python
+        python_path=$(which python)
+        if [ "$python_path" == "" ];
+        then
+            python_cmd=python3
+            python_path=$(which python3)
+            if [ "$python_path" == "" ];
+            then
+                echo "Pip install not found. Please install pip or pip3 then rerun the script."
+                exit
+            fi
+        fi
+
+        pip_cmd=pip
+        pip_path=$(which pip)
+        if [ "$pip_path" == "" ];
+        then
+            pip_cmd=pip3
+            pip_path=$(which pip3)
+            if [ "$pip_path" == "" ];
+            then
+                echo "Pip install not found. Please install pip or pip3 then rerun the script."
+                exit
+            fi
+        fi
+
         # Add python to path variables
         # install python packages
-        INSTALLED=$(pip3 show requests)
+        INSTALLED=$($pip_cmd show requests)
         if [ INSTALLED ==  "WARNING: Package(s) not found: requests" ];
         then
-            pip3 install requests
+            $pip_cmd install requests
         fi
 
-        INSTALLED=$(pip3 show openai)
+        INSTALLED=$($pip_cmd show openai)
         if [ INSTALLED ==  "WARNING: Package(s) not found: openai" ];
         then
-            pip3 install openai
+            $pip_cmd install openai
         fi
+        
+        $pip_cmd install python-dotenv
 
-        pip3 install python-dotenv
         # generate a new image
-        python3 wallpaper.py
+        $python_cmd wallpaper.py
     fi
     # set the desktop wallpaper
     osascript -e "tell application \"System Events\" to set picture of desktop 1 to \"$CUR_WALLPAPER_REL_PATH$TODAY_DIR/wallpaper.png\""

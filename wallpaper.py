@@ -86,13 +86,13 @@ def generate_prompt():
     
     return response.choices[0].message.content
 
-def generate_image(prompt, model="dall-e-3", num_images=1, resolution='1792x1024'):
+def generate_image(prompt, model="dall-e-3", resolution='1792x1024'):
     response = client.images.generate(
         model=model,
         prompt=prompt,
         size=resolution,
         quality="hd",
-        n=num_images,
+        n=1,
     )
     return {"prompt": response.data[0].revised_prompt,"url": response.data[0].url}
 
