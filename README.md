@@ -1,1 +1,3 @@
 # daily-generated-wallpaper
+
+This program uses OpenAI's models to generate a custom wallpaper daily. By utilizing both Dall-E-3 and GPT-4, the program generates a detailed prompt for an image that will be visually interesting based on some baseline guidance, which is generated into an image and set the desktop wallpaper. It is important to understand that this program is NOT free. It requires an OpenAI account with purchased API credits; however, the program should cost less than $0.15 a day, or around $4.50 a month. For this reason, it is recommended to set up automatic billing with OpenAI via https://platform.openai.com/account/billing/overview
