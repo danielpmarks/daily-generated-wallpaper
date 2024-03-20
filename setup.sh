@@ -44,17 +44,19 @@ then
     fi
 fi
 
-read -p "Please enter your OpenAI API key: " apiKey
-echo "API_KEY=\"$apiKey\"" > .env
-echo "DIRECTORY=\"$directory/\"" >> .env
+# read -p "Please enter your OpenAI API key: " apiKey
+# echo "API_KEY=\"$apiKey\"" > .env
+# echo "DIRECTORY=\"$directory/\"" >> .env
 
 echo "Please accept permission to edit automation on your mac"
 cron_job="*/5 * * * * export PATH=\$PATH:$pip_path; $directory/generate.sh;"
 
-if crontab -l | grep -q "$cron_job"; then
+# Add the job to the crontab
+if crontab -l | grep -q "$directory/generate.sh;"; then
     echo "The cron job already exists in the crontab."
 else 
-    echo "$cron_job" | crontab -
+    echo "Adding the command to your crontab"
+    (crontab -l ; echo "$cron_job") | crontab -
 fi
 
 message="You must enable cron to access system events to run automation. Continue to System Preferences? [y/N] " 
