@@ -52,9 +52,9 @@ then
     fi
 fi
 
-# read -p "Please enter your OpenAI API key: " apiKey
-# echo "API_KEY=\"$apiKey\"" > .env
-# echo "DIRECTORY=\"$directory/\"" >> .env
+read -p "Please enter your OpenAI API key: " apiKey
+echo "API_KEY=\"$apiKey\"" > .env
+echo "DIRECTORY=\"$directory/\"" >> .env
 
 echo "Please accept permission to edit automation on your mac"
 cron_job="*/5 * * * * export PATH=\$PATH:$pip_path; $directory/generate.sh;"
