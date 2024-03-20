@@ -3,6 +3,14 @@
 cd $(dirname "$0")
 directory=$(pwd)
 
+if [[ "$1" == "-d" ]]; then 
+    if crontab -l | grep -q "$directory/generate.sh;"; then
+        echo "The cron job already exists in the crontab."
+        crontab <(crontab -l | grep -v "$directory/generate.sh;")
+    fi
+    exit
+fi
+
 # Check that the user has python and pip installed
 python_path=$(which python)
 if [ "$python_path" == "" ];
